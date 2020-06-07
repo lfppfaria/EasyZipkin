@@ -9,14 +9,9 @@ namespace EasyZipkin.Attribute
 
         private Trace _trace;
 
-        private bool _remote;
+        private bool _remote;       
 
-        public TraceAttribute()
-        {
-
-        }
-
-        public TraceAttribute(string operationName)
+        public TraceAttribute(string operationName = null)
         {
             _operationName = operationName;
         }
