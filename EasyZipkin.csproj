@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Another Zipkin library aiming to ease usage of zipkin capabilities.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/lfppfaria/EasyZipkin</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/lfppfaria/EasyZipkin</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>Zipkin Trace Observability</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

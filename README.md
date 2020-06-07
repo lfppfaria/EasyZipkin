@@ -43,11 +43,11 @@ public async Task<IActionResult> Get()
 }
 ```
 
-After this simples setup if we go to Zipkin to find our trace we will find something like this:
+After this simple setup if we go to Zipkin to ckeck onour trace we will find something like this:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/FirstTrace.JPG?raw=true)
 
-We will automatically trace any methods with the Trace attribute within the call stack.
+We will automatically trace any methods with the TraceAttribute within the call stack. 
 So let's spice the things up a bit and call a method from our entry point.
 
 ```C# 
@@ -60,7 +60,8 @@ public async Task<IActionResult> Get()
     return Ok();
 }
 ```
-And on my DoSomethingAsync method we just decorate with the TraceAttribute...
+
+And on our DoSomethingAsync method we just decorate with the TraceAttribute...
 
 ```C#
 [Trace]
@@ -103,8 +104,8 @@ So far we covered the basics of tracing but we have some more stuff to show:
 
 #### Trace over http
 
-Zipkin is capable of send trace headers over http and resume tracing on the resource (since the resource also uses zipkin and it is porperly configured, of course).
-To help on this situation we implemented a RequestTracer, witch automatically adds the traces headers for you and the service will continue tracing.
+Zipkin is capable of send trace headers over http and resume tracing on the resource (if the resource also uses zipkin and it is properly configured, of course).
+To help on this situation we implemented a RequestTracer, witch automatically adds the traces headers for you and the service will continue tracing. 
 From the client:
 
 ```C#
@@ -122,6 +123,7 @@ On the remote server you just need to use our TraceHeaderMiddleware:
 ```C#
 app.UseMiddleware<TraceHeaderMiddleware>();
 ```
+
 And trace the controller method as usual:
 
 ```C#
@@ -132,9 +134,10 @@ public async Task<IActionResult> Get()
     //Do your stuff...            
 }
 ```
-Our library automatically will detect any zipkin header and resume tracing, if the request is an untraced request we will just trace from this point onwards.
 
-If everything is wired up properly we will have a trace wich started on our client application an resume tracing on a remote resource:
+Our library automatically will detect any zipkin header and resume tracing, if the request is an untraced request we will just trace from the entry point onwards.
+
+If everything is wired up properly we will have a trace wich started on our client application an resumed tracing on a remote resource:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/RemoteTraceTimeline.JPG?raw=true)
 
@@ -153,7 +156,7 @@ using (new ProducerTracer("producing to test mq")
 }
 ```
 
-Zipkin wil register the queue produce like this:
+Zipkin will record the submission to the queue like this:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ProduceTrace.JPG?raw=true)
 
