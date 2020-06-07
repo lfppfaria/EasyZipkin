@@ -67,7 +67,7 @@ And on my DoSomethingAsync method we just decorate with the TraceAttribute...
 public Task DoSomethingAsync()
 {
 	//let's wait a sec..
-    System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
+	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
 
     return Task.CompletedTask;
 }
@@ -138,6 +138,63 @@ using (new ConsumerTracer())
     //Consume from queue...
 }
 ```
+
+### Parallel and Async code
+
+Zipkin deals very well with parallel and async code but our goal is make things even easier.
+Thanks to [AsyncLocal](https://docs.microsoft.com/en-us/dotnet/api/system.threading.asynclocal-1?view=netcore-3.1) we are able to trace over an async stack.
+The usage is exactly the same.
+Let's see some code and a sample output:
+
+First let's suppose that we have a method wich will call our DoSomethingAsync:
+
+```C#
+[Trace]
+public async Task<IActionResult> Get()
+{
+    await _myClassWithSomeStuff.DoSomethingAsync();
+
+    return Ok();
+}
+```
+
+And the DoSomethingAsync will have a parallel for calling an async DoAnotherSomethingAsync wich will finally call JustAnotherMethod.
+
+Something like: DoSomethingAsync > DoAnotherSomethingAsync > JustAnotherMethod
+
+```C#
+[Trace]
+public Task DoSomethingAsync()
+{
+    Parallel.For(0, 3, async (item) =>
+    {
+        await DoAnotherSomethingAsync();
+    });
+
+    return Task.CompletedTask;
+}
+
+[Trace]
+public Task DoAnotherSomethingAsync()
+{
+    Parallel.For(0, 3, async (item) =>
+    {
+        await JustAnotherMethod();
+    });
+
+    return Task.CompletedTask;
+}
+
+[Trace]
+public Task JustAnotherMethod()
+{
+    return Task.CompletedTask;
+}
+```
+
+Now let's take another look on Zipkin:
+
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/RemoteTraceAnnotations.JPG?raw=true)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
