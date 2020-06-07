@@ -14,6 +14,12 @@ Just grab it from NuGet.
 
 Since we use MethodBoudaryAspect.Fody to add some AOP capabilities to our library you need to install it from NuGet as well on every project you desire to trace.
 
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/MethodBoundaryAspect.Fody.JPG?raw=true)
+
+Or using command line:
+
+install-package MethodBoundaryAspect.Fody
+
 ## Usage
 
 ### Basics
