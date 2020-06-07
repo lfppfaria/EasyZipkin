@@ -69,7 +69,7 @@ public Task DoSomethingAsync()
 	//let's wait a sec..
 	System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1));
 
-    return Task.CompletedTask;
+	return Task.CompletedTask;
 }
 ```
 
@@ -194,7 +194,7 @@ public Task JustAnotherMethod()
 
 Now let's take another look on Zipkin:
 
-![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/RemoteTraceAnnotations.JPG?raw=true)
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ParallelAndAsyncTrace.JPG?raw=true)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
