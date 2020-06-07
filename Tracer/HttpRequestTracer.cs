@@ -9,13 +9,12 @@ namespace EasyZipkin.Tracer
     {
         private readonly Trace _trace;
 
-        public HttpRequestTracer(HttpRequestMessage request, string name = null)
+        public HttpRequestTracer(HttpRequestMessage request)
         {
             _trace = TracerContext.Current.Child();
 
             request.AddTraceHeaders(_trace);
 
-            _trace.Record(Annotations.Rpc(name));
             _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));
             _trace.Record(Annotations.ClientSend());
         }
