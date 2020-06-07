@@ -55,13 +55,14 @@ So let's spice the things up a bit and call a method from our entry point.
 [Trace]
 public async Task<IActionResult> Get()
 {
-    await new MyClassWithSomeStuff().DoSomethingAsync();
+    _myClassWithSomeStuff.DoSomethingAsync();
 
     return Ok();
 }
 ```
 And on my DoSomethingAsync method we just decorate with the TraceAttribute...
 
+```C#
 [Trace]
 public Task DoSomethingAsync()
 {
@@ -70,6 +71,7 @@ public Task DoSomethingAsync()
 
     return Task.CompletedTask;
 }
+```
 
 Now let's take a look at Zipkin and we should have something like this:
 
