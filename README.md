@@ -41,6 +41,10 @@ public IEnumerable<WeatherForecast> Get()
 }
 ```
 
+After this simples setup if we go to Zipkin to find our trace we will find something like this:
+
+![Alt text](image/FirstTrace.JPG?raw=true "FirstTrace")
+
 ### Other tracing types
 
 So far we covered the basics of tracing but we have some more stuff to show:
@@ -87,7 +91,8 @@ using (new ProducerTracer())
 {
     //Produce to queue...
 }
-
+```
+```C#
 using (new ConsumerTracer())
 {
     //Consume from queue...

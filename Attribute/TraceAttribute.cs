@@ -5,11 +5,16 @@ namespace EasyZipkin.Attribute
 {
     public class TraceAttribute : OnMethodBoundaryAspect
     {
-        private readonly string _operationName;
+        private string _operationName;
 
         private Trace _trace;
 
         private bool _remote;
+
+        public TraceAttribute()
+        {
+
+        }
 
         public TraceAttribute(string operationName)
         {
@@ -18,7 +23,10 @@ namespace EasyZipkin.Attribute
 
         public override void OnEntry(MethodExecutionArgs arg)
         {
-            _remote = TracerContext.HasRemoteTracer;
+            if (string.IsNullOrEmpty(_operationName))
+                _operationName = arg.Method.Name;
+
+                _remote = TracerContext.HasRemoteTracer;
 
             if (_remote)
                 _trace = TracerContext.RetrieveRemoteTrace();
