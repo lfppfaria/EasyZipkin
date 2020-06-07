@@ -89,6 +89,14 @@ It wil be registred within the current Trace just like this:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/CustomAnnotation.JPG?raw=true)
 
+#### Exceptions
+
+If something goes wrong wile tracing we automatically add a Exception Annotation on the span with the exception and the stack trace.
+Note that our goal is not to turn Zipkin into a logging tool and you should not use on this way as well.
+But we think it could be useful have some register if something goes wrong.
+
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/Exception.JPG?raw=true)
+
 ### Other tracing types
 
 So far we covered the basics of tracing but we have some more stuff to show:
