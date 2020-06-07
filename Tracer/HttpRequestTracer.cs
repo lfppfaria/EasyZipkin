@@ -1,8 +1,7 @@
-﻿using System;
+﻿using EasyZipkin.Helper;
+using System;
 using System.Net.Http;
 using zipkin4net;
-using EasyZipkin;
-using EasyZipkin.Helper;
 
 namespace EasyZipkin.Tracer
 {
@@ -10,12 +9,13 @@ namespace EasyZipkin.Tracer
     {
         private readonly Trace _trace;
 
-        public HttpRequestTracer(HttpRequestMessage request)
+        public HttpRequestTracer(HttpRequestMessage request, string name = null)
         {
             _trace = TracerContext.Current.Child();
 
             request.AddTraceHeaders(_trace);
 
+            _trace.Record(Annotations.Rpc(name));
             _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));
             _trace.Record(Annotations.ClientSend());
         }
