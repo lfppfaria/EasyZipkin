@@ -2,6 +2,12 @@
 
 Another Zipkin library aiming to ease usage of zipkin capabilities.
 
+## About Zipkin
+
+[Zipkin](https://zipkin.io) is a distributed tracing system wich helps gather information to troubleshoot latency problems in service oriented architectures.
+
+More info will be found on their web site: [https://zipkin.io](https://zipkin.io)
+
 ## Installation
 
 Just grab it from NuGet.
