@@ -77,6 +77,18 @@ Now let's take a look at Zipkin and we should have something like this:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/NestedTrace.JPG?raw=true)
 
+#### Annotations
+
+We are also able to add some custom annotations to our trace.
+
+```C#
+TracerContext.RegisterEvent("Hi there!");
+```
+
+It wil be registred within the current Trace just like this:
+
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/CustomAnnotation.JPG?raw=true)
+
 ### Other tracing types
 
 So far we covered the basics of tracing but we have some more stuff to show:
@@ -127,17 +139,26 @@ With the annotations giving us some info about how things happened:
 A lot of applications use message queues such as RabbitMQ, IBMMQ, Azure or any other and sometimes might be interesting to trace the acts of producing and/or consuming:
 
 ```C#
-using (new ProducerTracer())
+using (new ProducerTracer("producing to test mq")
 {
     //Produce to queue...
 }
 ```
+
+Zipkin wil register the queue produce like this:
+
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ProduceTrace.JPG?raw=true)
+
 ```C#
-using (new ConsumerTracer())
+using (new ConsumerTracer("consuming from mq"))
 {
     //Consume from queue...
 }
 ```
+
+And the consumption will be registred like this:
+
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ConsumeTrace.JPG?raw=true)
 
 ### Parallel and Async code
 

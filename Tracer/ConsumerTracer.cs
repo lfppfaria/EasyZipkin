@@ -7,9 +7,13 @@ namespace EasyZipkin.Tracer
     {
         private readonly Trace _trace;
 
-        public ConsumerTracer()
+        public ConsumerTracer(string name)
         {
-            _trace = TracerContext.Current;
+            _trace = TracerContext.Current.Child();
+
+            TracerContext.Push(_trace);
+
+            _trace.Record(Annotations.Rpc(name));
 
             _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));
             _trace.Record(Annotations.ConsumerStart());
@@ -18,6 +22,8 @@ namespace EasyZipkin.Tracer
         public void Dispose()
         {
             _trace.Record(Annotations.ConsumerStop());
+
+            TracerContext.Pop();
         }
     }
 }

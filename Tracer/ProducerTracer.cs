@@ -7,17 +7,22 @@ namespace EasyZipkin.Tracer
     {
         private readonly Trace _trace;
 
-        public ProducerTracer()
+        public ProducerTracer(string name)
         {
-            _trace = TracerContext.Current;
+            _trace = TracerContext.Current.Child();
 
-            _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));
+            TracerContext.Push(_trace);
+
+            _trace.Record(Annotations.Rpc(name));
+            _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));            
             _trace.Record(Annotations.ProducerStart());
         }
 
         public void Dispose()
         {
             _trace.Record(Annotations.ProducerStop());
+
+            TracerContext.Pop();
         }
     }
 }
