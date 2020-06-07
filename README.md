@@ -43,7 +43,7 @@ public IEnumerable<WeatherForecast> Get()
 
 After this simples setup if we go to Zipkin to find our trace we will find something like this:
 
-![Alt text](image/FirstTrace.JPG?raw=true "FirstTrace")
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/FirstTrace.JPG?raw=true)
 
 ### Other tracing types
 
