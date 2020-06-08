@@ -96,6 +96,8 @@ Now let's take a look at Zipkin and we should have something like this:
 
 We are also able to add some custom annotations to our trace.
 
+Event:
+
 ```C#
 TracerContext.RegisterEvent("Hi there!");
 ```
@@ -103,6 +105,16 @@ TracerContext.RegisterEvent("Hi there!");
 It wil be registred within the current Trace just like this:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/CustomAnnotation.JPG?raw=true)
+
+Tag:
+
+```C#
+TracerContext.AddTag("myKey", "myValue");
+```
+
+And on Zipkin we have:
+
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/CustomAnnotationTag.JPG?raw=true)
 
 #### Exceptions
 
