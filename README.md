@@ -29,10 +29,15 @@ install-package MethodBoundaryAspect.Fody
 From your Startup.cs (or Program.cs) just create a new trace context with service name and the collector url:
 
 ```C#
-new TracerContextBuilder()
-.WithServiceName("sample_api")
-.WithCollectorUri("http://localhost:9411")
-.Build();
+public void ConfigureServices(IServiceCollection services)
+{
+	new TracerContextBuilder()
+		.WithServiceName("sample_api")
+		.WithCollectorUri("http://localhost:9411")
+		.Build();
+
+	//Register your stuff...
+}
 ```
 Next we just need to tell the method that we wanna trace:
 
