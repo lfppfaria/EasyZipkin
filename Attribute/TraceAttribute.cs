@@ -9,7 +9,7 @@ namespace EasyZipkin.Attribute
 
         private Trace _trace;
 
-        private bool _remote;       
+        private bool _remote;
 
         public TraceAttribute(string operationName = null)
         {
@@ -21,7 +21,7 @@ namespace EasyZipkin.Attribute
             if (string.IsNullOrEmpty(_operationName))
                 _operationName = arg.Method.Name;
 
-                _remote = TracerContext.HasRemoteTracer;
+            _remote = TracerContext.HasRemoteTracer;
 
             if (_remote)
                 _trace = TracerContext.RetrieveRemoteTrace();

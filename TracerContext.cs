@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using EasyZipkin.Tracer;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using zipkin4net;
@@ -59,6 +60,18 @@ namespace EasyZipkin
             current.Record(Annotations.Event(name));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public static void AddTag(string key, string value)
+        {
+            var current = _traces.Peek();
+
+            current.Record(Annotations.Tag(key, value));
+        }       
+
         internal static void SetRemoteTrace(Trace trace)
         {
             _remoteTrace.Push(trace);
@@ -67,6 +80,6 @@ namespace EasyZipkin
         internal static Trace RetrieveRemoteTrace()
         {
             return _remoteTrace.Pop();
-        }        
+        }
     }
 }

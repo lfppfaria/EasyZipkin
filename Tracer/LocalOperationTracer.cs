@@ -3,18 +3,18 @@ using zipkin4net;
 
 namespace EasyZipkin.Tracer
 {
-    public class LocalOperationTracer : IDisposable
+    internal class LocalOperationTracer
     {
-        private readonly Trace _trace;
+        private Trace _trace;
 
-        public LocalOperationTracer(string operationName)
+        internal void BeginTrace(string operationName)
         {
             _trace = Trace.Current.Child();
 
             _trace.Record(Annotations.LocalOperationStart(operationName));
         }
 
-        public void Dispose()
+        internal void EndTrace()
         {
             _trace.Record(Annotations.LocalOperationStop());
         }

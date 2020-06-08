@@ -1,22 +1,20 @@
-﻿using System;
-using zipkin4net;
+﻿using zipkin4net;
 
 namespace EasyZipkin.Tracer
 {
-    public class ProducerTracer : IDisposable
+    internal class ProducerTracer
     {
-        private readonly Trace _trace;
+        private Trace _trace;
 
-        public ProducerTracer(string name = null)
+        internal void BeginTrace()
         {
-            _trace = TracerContext.Current.Child();
+            _trace = TracerContext.Current;
 
-            _trace.Record(Annotations.Rpc(name));
-            _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));            
+            _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));
             _trace.Record(Annotations.ProducerStart());
         }
 
-        public void Dispose()
+        internal void EndTrace()
         {
             _trace.Record(Annotations.ProducerStop());
         }

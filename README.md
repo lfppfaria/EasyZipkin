@@ -127,10 +127,8 @@ var httpClient = _httpClientFactory.CreateClient();
 
 var request = new HttpRequestMessage(HttpMethod.Get, "https://myremotecall");
 
-using (new HttpRequestTracer(request))
-{
-    var response = await httpClient.SendAsync(request);
-}
+await Tracer.TraceHttpRequest(request, async () => await httpClient.SendAsync(request));
+
 ```
 On the remote server you just need to use our TraceHeaderMiddleware:
 
@@ -153,21 +151,29 @@ Our library automatically will detect any zipkin header and resume tracing, if t
 
 If everything is wired up properly we will have a trace wich started on our client application an resumed tracing on a remote resource:
 
-![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/RemoteTraceTimeline.JPG?raw=true)
+![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/NewRemoteTraceTimeline.JPG?raw=true)
 
 With the annotations giving us some info about how things happened:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/RemoteTraceAnnotations.JPG?raw=true)
+
+If the remote resource you are using is not instrumented with Zipkin (and our package) you can trace like this:
+
+```C#
+await Tracer.TraceUnmanagedHttpRequest(request, "not_instrumented_resource", async () => await httpClient.SendAsync(request));
+```
+
+This will allow you to trace this uninstrummented as if it is instrumented.
 
 #### Queues
 
 A lot of applications use message queues such as RabbitMQ, IBMMQ, Azure or any other and sometimes might be interesting to trace the acts of producing and/or consuming:
 
 ```C#
-using (new ProducerTracer("producing to test mq")
+Tracer.TraceProduce(() =>
 {
     //Produce to queue...
-}
+});
 ```
 
 Zipkin will record the submission to the queue like this:
@@ -175,15 +181,31 @@ Zipkin will record the submission to the queue like this:
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ProduceTrace.JPG?raw=true)
 
 ```C#
-using (new ConsumerTracer("consuming from mq"))
+Tracer.TraceConsume(() =>
 {
+    var message = string.Empty;
+
     //Consume from queue...
-}
+
+    return message;
+});
 ```
 
 And the consumption will be registred like this:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ConsumeTrace.JPG?raw=true)
+
+#### More local trace
+
+If you have a block of code that you want to track and for some reason you can't create a new method you can do it this way:
+
+```C#
+Tracer.TraceLocal("my_local_operation", () => 
+{
+    //Do your stuff...
+});
+```
+Note: It is highly recommended and good practice that if you have some code important enough to want to track it, most likely that code should be in another method or even another class..
 
 ### Parallel and Async code
 
