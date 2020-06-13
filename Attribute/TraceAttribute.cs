@@ -1,4 +1,5 @@
-﻿using MethodBoundaryAspect.Fody.Attributes;
+﻿using EasyZipkin.Tracers;
+using MethodBoundaryAspect.Fody.Attributes;
 using zipkin4net;
 
 namespace EasyZipkin.Attribute
@@ -7,13 +8,17 @@ namespace EasyZipkin.Attribute
     {
         private string _operationName;
 
+        private bool _setCurrent;
+
         private Trace _trace;
 
         private bool _remote;
 
-        public TraceAttribute(string operationName = null)
+        public TraceAttribute(string operationName = null, bool setCurrent = true)
         {
             _operationName = operationName;
+
+            _setCurrent = setCurrent;
         }
 
         public override void OnEntry(MethodExecutionArgs arg)
@@ -26,10 +31,16 @@ namespace EasyZipkin.Attribute
             if (_remote)
                 _trace = TracerContext.RetrieveRemoteTrace();
 
-            if (_trace == null)
-                _trace = TracerContext.Current?.Child() ?? Trace.Create();
+            if (TracerContext.ThreadParent.Value != null)
+                _trace = TracerContext.ThreadParent.Value.Trace.Child();
 
-            TracerContext.Push(_trace);
+            if (_trace == null)
+                _trace = TracerContext.Current?.Trace.Child() ?? Trace.Create();
+
+            if (_setCurrent)
+                TracerContext.Push(new Tracer { MethodName = _operationName, Trace = _trace });
+
+            TracerContext.ThreadCurrent.Value = new Tracer { MethodName = _operationName, Trace = _trace };
 
             _trace.Record(Annotations.ServiceName(TracerContext.ServiceName));
             _trace.Record(Annotations.Rpc(_operationName));
@@ -47,7 +58,11 @@ namespace EasyZipkin.Attribute
             else
                 _trace.Record(Annotations.LocalOperationStop());
 
-            TracerContext.Pop();
+            if (_setCurrent)
+                TracerContext.Pop();
+
+            TracerContext.ThreadCurrent.Value = null;
+            TracerContext.ThreadParent.Value = null;
         }
 
         public override void OnException(MethodExecutionArgs arg)

@@ -136,7 +136,7 @@ So far we covered the basics of tracing but we have some more stuff to show:
 #### Trace over http
 
 Zipkin is capable of send trace headers over http and resume tracing on the resource (if the resource also uses zipkin and it is properly configured, of course).
-To help on this situation we implemented a RequestTracer, witch automatically adds the traces headers for you and the service will continue tracing. 
+To help on this situation we implemented a RequestTracer, witch automatically adds the TracerS headers for you and the service will continue tracing. 
 From the client:
 
 ```C#
@@ -280,6 +280,40 @@ public Task JustAnotherMethod()
 Now let's take another look on Zipkin:
 
 ![Alt text](https://github.com/lfppfaria/EasyZipkin/blob/master/Images/ParallelAndAsyncTrace.JPG?raw=true)
+
+### Issues with parallel execution
+
+Sometimes depending on the complexity of the business, the number of nested parallel loops or the execution time of each method, we may end up experiencing problems in how traces are registered. We can end up with a scenario where a trace can end up being registered as the wrong parent's child.
+
+To solve this, the context provides mechanisms to inject the parent in parallel executions without having to change the method signature.
+
+```C#
+[Trace]
+public Task DoSomethingAsync()
+{
+	//First we get the thread current tracer
+    var parentThreadCurrent = TracerContext.Current;
+
+	Parallel.ForEach(yourList, (item) => 
+	{
+		//Next we set the outside thread tracer as the parent tracer of the current thread
+		TracerContext.SetThreadParent(parentThreadCurrent);
+
+		//Do your stuff
+	});
+
+    return Task.CompletedTask;
+}
+```
+
+Important! Don't try to save lines of code by doing this:
+
+```C#
+//Don't do this
+TracerContext.SetThreadParent(TracerContext.Current);
+```
+
+Because of how the internal thread management mechanism works if you try to do it that way, we will return to the original problem. We are working on a way to resolve this in an automated way.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

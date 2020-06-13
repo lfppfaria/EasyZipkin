@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Net.Http;
 using zipkin4net;
 
-namespace EasyZipkin.Tracer
+namespace EasyZipkin.Tracers
 {
     internal class UnmanagedHttpRequestTracer
     {
@@ -23,7 +23,7 @@ namespace EasyZipkin.Tracer
 
             _rpc = request.RequestUri.AbsoluteUri;
 
-            _trace = TracerContext.Current.Child();
+            _trace = TracerContext.Current.Trace.Child();
 
             _trace.Record(Annotations.ServiceName(_remoteServiceName));
             _trace.Record(Annotations.Rpc(_rpc));

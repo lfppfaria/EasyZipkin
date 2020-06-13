@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Net.Http;
+using zipkin4net;
 
-namespace EasyZipkin.Tracer
+namespace EasyZipkin.Tracers
 {
-    public static class Tracer
+    public class Tracer
     {
+        internal Trace Trace { get; set; }
+
+        public string MethodName { get; set; }
+
         /// <summary>
         /// Use this tracer when you want to trace a remote resource (like a web api) wich is not running Zipzin
         /// and will not be able to resume tracing.

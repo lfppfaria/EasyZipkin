@@ -2,7 +2,7 @@
 using System.Net.Http;
 using zipkin4net;
 
-namespace EasyZipkin.Tracer
+namespace EasyZipkin.Tracers
 {
     internal class HttpRequestTracer
     {
@@ -10,7 +10,7 @@ namespace EasyZipkin.Tracer
 
         internal void BeginTrace(HttpRequestMessage request)
         {
-            _trace = TracerContext.Current.Child();
+            _trace = TracerContext.Current.Trace.Child();
 
             request.AddTraceHeaders(_trace);
 

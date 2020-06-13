@@ -1,7 +1,7 @@
 ﻿using System;
 using zipkin4net;
 
-namespace EasyZipkin.Tracer
+namespace EasyZipkin.Tracers
 {
     internal class LocalOperationTracer
     {
